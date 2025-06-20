@@ -39,6 +39,12 @@ GestureMouse/
 ## 三、环境搭建
 依赖安装
 在项目根目录下，使用以下命令安装所需的 Python 依赖：
+
+```bash
+pip install -r requirements.txt
+```
+
+依赖库如下
 ```
 torch
 torchvision
