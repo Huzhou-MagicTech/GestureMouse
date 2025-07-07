@@ -3,7 +3,7 @@ import numpy as np
 import tkinter as tk
 import pyautogui
 from pynput.mouse import Controller,Button
-
+from config import label_map
 class ImgProcess:
     def __init__(self, image_shape):
         self.image_shape = image_shape
@@ -20,13 +20,7 @@ class ImgProcess:
         self.screen_point2 = (self.center[0] + 100, self.center[1] + 100)
         self.mouse_status = "release"  # 鼠标状态，初始为释放状态
         self.mouse_status_count = 0  # 鼠标状态计数器
-        self.label_map = {
-            0: '捏合 (Pinch)', 
-            1: '握拳 (Fist)', 
-            2: '手掌 (Palm)', 
-            3: '食指和中指 (Index_Middle)', 
-            4: '一只食指 (Index)'
-        }   
+        self.label_map = label_map
         
         self.mouse = Controller()
         

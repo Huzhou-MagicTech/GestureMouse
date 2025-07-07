@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 import numpy as np
-
+from config import label_map
 class GesturePredictor:
     """
     一个用于加载预训练手势识别模型并进行预测的类。
@@ -51,13 +51,7 @@ class GesturePredictor:
         self.model.eval()
 
         # 定义标签映射，用于将输出索引转换为可读的标签
-        self.label_map = {
-            0: '捏合 (Pinch)', 
-            1: '握拳 (Fist)', 
-            2: '手掌 (Palm)', 
-            3: '食指和中指 (Index_Middle)', 
-            4: '一只食指 (Index)'
-        }
+        self.label_map = label_map
         print(f"模型已从 '{model_path}' 加载，正在使用 {self.device} 设备。")
 
     # --- 3. 定义预测方法 ---
@@ -91,48 +85,3 @@ class GesturePredictor:
 
         # 将索引映射回人类可读的标签
         return self.label_map.get(predicted_idx, "未知类别")
-
-# --- 如何使用这个类 ---
-if __name__ == '__main__':
-    # 这是一个示例，展示了如何使用 HandPosePredictor 类。
-    # 在你的实际应用中，`res` 会来自 MediaPipe 的实时视频流。
-    
-    # 假设你的模型文件叫 "hand_gesture_model.pth" 并且在同一个目录下
-    model_file_path = 'hand_gesture_model.pth'
-
-    # 1. 实例化预测器
-    # 这会在初始化时加载模型，只需要执行一次。
-    try:
-        gesture_detector = HandPosePredictor(model_file_path)
-    except FileNotFoundError:
-        print(f"错误: 模型文件 '{model_file_path}' 未找到。")
-        print("请确保模型文件与此脚本位于同一目录，或提供正确的文件路径。")
-        exit()
-
-    # 2. 准备一个模拟的输入数据
-    # 在你的实际代码中，`hand_landmarks_sample` 会是 mediapipe 的输出结果，
-    # 比如 `results.hand_landmarks[0]`。
-    # 这里我们用随机数据创建一个结构相同的模拟对象。
-    class Landmark:
-        def __init__(self, x, y, z):
-            self.x, self.y, self.z = x, y, z
-
-    class HandLandmarks:
-        def __init__(self, landmarks):
-            self.landmark = landmarks
-
-    # 创建21个随机关键点
-    mock_landmarks = [Landmark(np.random.rand(), np.random.rand(), np.random.rand()) for _ in range(21)]
-    hand_landmarks_sample = HandLandmarks(mock_landmarks)
-
-
-    # 3. 进行预测
-    # 你可以在一个循环中（例如，处理视频帧）反复调用此方法。
-    prediction = gesture_detector.predict(hand_landmarks_sample)
-
-    # 4. 打印结果
-    print(f"\n模拟输入数据的预测结果是: {prediction}")
-
-    # 示例：处理没有检测到手的情况
-    no_hand_prediction = gesture_detector.predict(None)
-    print(f"未检测到手时的预测结果是: {no_hand_prediction}")

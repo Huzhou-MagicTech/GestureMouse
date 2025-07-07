@@ -31,28 +31,16 @@ while True:
         hand_detector.process(img,False)
         #储存position字典
         position = hand_detector.find_position(img)
-        #获取到左手的食指指尖，如果获取不到返回None
-        left_finger = position['Left'].get(8,None)
-        left_bigger = position['Left'].get(4,None)
-        # print(left_finger)
-        # if left_finger:
-        #     cv2.circle(img,(left_finger[0],left_finger[1]),10,(0,0,255),cv2.FILLED)
-        # if left_bigger:
-        #     cv2.circle(img, (left_bigger[0], left_bigger[1]), 10, (255, 0, 0), cv2.FILLED)
 
-        
         right_bigger = position['Right'].get(4,None)
         right_finger = position['Right'].get(8, None)
         
         if len(position['Right']) >= 10:
-            # print(position['Right'])
-            # draw_rect(img, (right_bigger[0], right_bigger[1]), (right_finger[0], right_finger[1]), color=(255, 0, 0))
             res = convert_landmarks_to_list(position['Right'])
             predictions = gesture_detector.predict(res)
             print("predictions:", predictions)
 
         img = drawer.process_image(img, predictions, position['Right'])
-
 
         cv2.imshow('Video',img)
     k = cv2.waitKey(1)

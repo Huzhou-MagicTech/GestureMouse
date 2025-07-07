@@ -4,15 +4,8 @@ import torch.optim as optim
 from torch.utils.data import Dataset, DataLoader
 import pandas as pd
 import os # 导入 os 模块来处理文件路径
+from config import * 
 
-# --- 1. 定义超参数和设备 ---
-# Hyperparameters
-input_size = 21 * 3  # 21个3D坐标点 (x, y, z)
-num_classes = 5      # 5种手势
-learning_rate = 0.001
-batch_size = 16
-num_epochs = 20      # 训练轮次，你可以根据需要调整
-model_save_path = 'model/hand_gesture_model.pth' # 定义模型保存路径
 
 # Device configuration (GPU if available, otherwise CPU)
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -131,7 +124,6 @@ if os.path.exists(model_save_path):
         predicted_class = torch.argmax(prediction, dim=1).item()
 
     # 定义标签映射以显示人类可读的名称
-    label_map = {0: '捏合 (Pich)', 1: '握拳 (Fist)', 2: '手掌 (Palm)', 3: '食指和中指 (Index_Middle)', 4: '一只食指 (Index)'}
 
     print(f"\n测试样本的真实标签: {label_map[sample_label.item()]}")
     print(f"加载的模型预测结果: {label_map[predicted_class]}")
